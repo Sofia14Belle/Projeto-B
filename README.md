@@ -9,6 +9,7 @@ Por ser um framework e uma linguagem novos para mim, é evidente que ainda não 
 Se quiser acompanhar o processo, você pode acessar a playlist das lives deste projeto no meu canal do YouTube:  
 **Playlist das Lives:** [Lives](https://youtube.com/playlist?list=PLPFcnwFvZAMZfgLLpt17qpilg_pPwBkm4&si=VbrqY8WBIm2ix5x9)  
 **Canal no YouTube:** [Canal](https://www.youtube.com/@DevKeyllian)  
+**Integrantes:** Sofia de Souza Beleza
 
 # Sumário
 
