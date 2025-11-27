@@ -1,0 +1,82 @@
+<%= form_with model: @visit, class: "bg-gray-700 p-6 rounded-lg shadow-md" do |visit| %>
+    
+    <div class="mb-4">
+        <%= visit.label :visitor_id, "Visitor", class: "block text-white text-lg font-medium mb-2"%>
+        <%= visit.collection_select :visitor_id, Visitor.all, :id, :name, { prompt: "Select the visitor" }, class: "w-full p-2 rounded-lg bg-gray-800 text-white border border-gray-600 focus:ring-2 focus:ring-blue-500 focus:outline-none"%>
+    </div>
+
+    <div class="mb-4">
+    <%= visit.label :unit_id, "Unit", class: "block text-white text-lg font-medium mb-2" %>
+    <% if current_user.admin? %>
+        <%= visit.collection_select :unit_id, Unit.all, :id, :name, { prompt: "Select the unit" }, id: "unit_select", class: "w-full p-2 rounded-lg bg-gray-800 text-white border border-gray-600 focus:ring-2 focus:ring-blue-500 focus:outline-none" %>
+    <% else %>
+        <%= visit.collection_select :unit_id, Unit.where(id: current_user.unit_id), :id, :name, { prompt: "Select the unit" }, id: "unit_select", class: "w-full p-2 rounded-lg bg-gray-800 text-white border border-gray-600 focus:ring-2 focus:ring-blue-500 focus:outline-none" %>
+    <% end %>
+    </div>
+
+    <div class="mb-4">
+        <%= visit.label :sector_id, "Sector", class: "block text-white text-lg font-medium mb-2"%>
+        <%= visit.collection_select :sector_id, [], :id, :name, { prompt: "Select the sector" }, id: "sector_select", class: "w-full p-2 rounded-lg bg-gray-800 text-white border border-gray-600 focus:ring-2 focus:ring-blue-500 focus:outline-none"%>
+    </div>
+
+    <div class="mb-4">
+        <%= visit.label :user_id, "Functionario", class: "block text-white text-lg font-medium mb-2"%>
+        <%= visit.collection_select :user_id, [], :id, :name, { prompt: "Select the functionario" }, id: "user_select", class: "w-full p-2 rounded-lg bg-gray-800 text-white border border-gray-600 focus:ring-2 focus:ring-blue-500 focus:outline-none"%>
+    </div>
+
+    <div class="mb-4">
+        <%= visit.label :status, "Status", class: "block text-white text-lg font-medium mb-2"%>
+        <%= visit.select :status, Visit.statuses.keys.map { |s| [s.humanize, s] }, { prompt: "Select the status" }, class: "w-full p-2 rounded-lg bg-gray-800 text-white border border-gray-600 focus:ring-2 focus:ring-blue-500 focus:outline-none"%>
+    </div>
+
+    <div class="mb-4">
+        <%= visit.label :date_time, "Date e Time", class: "block text-white text-lg fontSelect-medium mb-2"%>
+        <%= visit.datetime_field :date_time, class: "w-full p-2 rounded-lg bg-gray-800 text-white border border-gray-600 focus:ring-2 focus:ring-blue-500 focus:outline-none" %>
+    </div>
+
+    <div>
+        <%= visit.submit "Save", class: "w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition"%>
+    </div>
+<% end %>
+
+<script>
+    document.addEventListener('turbo:load', function() {
+    const unitSelect = document.getElementById('unit_select');
+    const sectorSelect = document.getElementById('sector_select');
+    const userSelect = document.getElementById('user_select');
+
+    if (unitSelect) {
+        unitSelect.addEventListener('change', function() {
+            const unitId = this.value;
+            fetch(`/units/${unitId}/sectors`)
+                .then(response => response.json())
+                .then(data => {
+                    sectorSelect.innerHTML = '<option value="">Select the sector</option>';
+                    data.forEach(sector => {
+                        const option = document.createElement('option');
+                        option.value = sector.id;
+                        option.text = sector.name;
+                        sectorSelect.appendChild(option);
+                    });
+                });
+        });
+    }
+
+    if (sectorSelect) {
+        sectorSelect.addEventListener('change', function() {
+            const sectorId = this.value;
+            fetch(`/sectors/${sectorId}/users`)
+                .then(response => response.json())
+                .then(data => {
+                    userSelect.innerHTML = '<option value="">Select the functionario</option>';
+                    data.forEach(user => {
+                        const option = document.createElement('option');
+                        option.value = user.id;
+                        option.text = user.name;
+                        userSelect.appendChild(option);
+                    });
+                });
+        });
+    }
+});
+</script>

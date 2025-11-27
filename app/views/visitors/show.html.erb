@@ -1,0 +1,27 @@
+<div class="max-w-2xl mx-auto bg-gray-800 text-white p-6 shadow-md rounded-lg mt-6">
+    <h1 class="text-2xl font-bold mb-4">Visitor data</h1>
+
+    <div class="flex items-center space-x-2">
+    <% if @visitor.photo? %>
+        <%= image_tag @visitor.photo.url, class: "w-10 h-10 rounded-full border-2 border-white object-cover" %>
+        <span class="text-sm text-gray-300"><%= @visitor.remote_photo_url %></span>
+    <% end %>
+        <p class="text-lg text-gray-300 mb-2">Name: <%= @visitor.name %></p>
+    </div>
+
+    <p class="text-lg text-gray-300 mb-2">RG: <%= @visitor.rg %></p>
+    <p class="text-lg text-gray-300 mb-2">CPF: <%= @visitor.cpf %></p>
+    <p class="text-lg text-gray-300 mb-2">Telephone: <%= @visitor.telephone %></p>
+
+    <div class="flex space-x-4">
+        <%= link_to 'Back', visitors_path, class: "bg-gray-600 hover:bg-gray-700 px-4 py-2 rounded-lg transition" %>
+
+        <% if can? :update, Visitor %>
+            <%= link_to "Update", edit_visitor_path, class: "bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg transition"%>
+        <% end %>
+        <% if can? :destroy, Visitor %>
+            <%= button_to "Delete", @visitor, method: :delete, data: { turbo_confirm: "Are you sure?" }, class: "bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg transition" %>
+        <% end %>
+    </div>
+    
+</div>
