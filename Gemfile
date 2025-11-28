@@ -5,7 +5,7 @@ gem "rails", "~> 8.0.1"
 # The modern asset pipeline for Rails [https://github.com/rails/propshaft]
 gem "propshaft"
 # Use postgresql as the database for Active Record
-gem "pg", "~> 1.5", ">= 1.5.6"
+gem "pg", "~> 1.6"
 # Use dotenv to load environment variables from .env into ENV [
 gem "dotenv-rails", "~> 2.1", ">= 2.1.1"
 # Use Devise for user authentication [
