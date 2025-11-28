@@ -83,7 +83,7 @@ GEM
     bindex (0.8.1)
     bootsnap (1.18.4)
       msgpack (~> 1.2)
-    brakeman (7.0.0)
+    brakeman (7.1.1)
       racc
     brazilian_documents (0.1.8)
       digit_checksum (~> 0.2.3)
