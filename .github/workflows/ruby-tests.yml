@@ -1,0 +1,73 @@
+name: Rails Tests
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:13
+        ports: ["5432:5432"]
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: dunnas_test
+        options: >-
+          --health-cmd="pg_isready -U postgres"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+    env:
+      RAILS_ENV: test
+      DATABASE_URL: postgres://postgres:postgres@localhost:5432/dunnas_test
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.2
+          bundler-cache: true
+
+      - name: Instalar dependências
+        run: |
+          bundle install --jobs 4 --retry 3
+
+      - name: Configurar database.yml
+        run: |
+          cp config/database.yml config/database.yml.bkp || true
+          cat <<EOF > config/database.yml
+          test:
+            adapter: postgresql
+            encoding: unicode
+            database: dunnas_test
+            pool: 5
+            username: postgres
+            password: postgres
+            host: localhost
+          EOF
+
+      - name: Criar e migrar banco de dados
+        run: |
+          bundle exec rails db:create
+          bundle exec rails db:migrate
+
+      - name: Rodar testes
+        run: |
+          bundle exec rails test
+
+      - name: Salvar cobertura como artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage
